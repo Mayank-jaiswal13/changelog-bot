@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { test, expect, describe } from '@jest/globals';
 import { escapeRegExp, escapeQuotes } from '@/utils/escape.js';
 

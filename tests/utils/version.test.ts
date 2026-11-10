@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, test, expect } from '@jest/globals';
 import { normalizeReleaseName, versionFromRef } from '@/utils/version.js';
 

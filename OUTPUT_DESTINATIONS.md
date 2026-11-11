@@ -10,7 +10,7 @@ Let’s see how a developer named Aditya might use them.
 
 Aditya has been working on his project. He has added new features, fixed some bugs, and improved existing functionality.
 
-Now he wants to update the project’s CHANGELOG.md with the changes from his latest development work.
+Now he wants to update the project’s `CHANGELOG.md` with the changes from his latest development work.
 
 He runs:
 

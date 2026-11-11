@@ -42,7 +42,7 @@ pnpm dlx @nyaomaru/changelog-bot \
   --dry-run
 ```
 
-The dry-run prints the full updated changelog and provider diagnostics to the terminal without writing anything to disk or creating a pull request.
+The `dry-run` prints the full updated changelog and provider diagnostics to the terminal without writing anything to disk or creating a pull request.
 
 Once Aditya is satisfied with the preview, he can run the command with --output file to update the actual file.
 
@@ -52,7 +52,7 @@ Once Aditya is satisfied with the preview, he can run the command with --output 
 
 Aditya has another requirement. He wants to publish the generated release notes through a separate announcement tool.
 
-He doesn’t need the entire updated CHANGELOG.md. He only needs the newly generated release section.
+He doesn’t need the entire updated `CHANGELOG.md`. He only needs the newly generated release section.
 
 For this, he uses the stdout destination:
 
@@ -63,7 +63,7 @@ pnpm dlx @nyaomaru/changelog-bot \
   --output stdout
 ```
 
-With stdout, changelog-bot prints only the generated release section as Markdown to standard output. Informational logs and status messages are sent to standard error.
+With **stdout**, changelog-bot prints only the generated release section as Markdown to standard output. Informational logs and status messages are sent to standard error.
 
 Aditya can also redirect the output into a separate file:
 
@@ -74,7 +74,7 @@ pnpm dlx @nyaomaru/changelog-bot \
   --output stdout > release-notes.md
 ```
 
-Now release-notes.md contains the generated release section, ready to be used by another tool or shared separately.
+Now *release-notes.md* contains the generated release section, ready to be used by another tool or shared separately.
 
 ## 4. Let changelog-bot create a pull request
 
@@ -93,9 +93,17 @@ This requires GitHub authentication with permission to push a branch and create 
 
 Repository identity and authentication
 
-When running the CLI directly outside GitHub Actions, repository identity may need to be supplied through REPO_FULL_NAME in owner/repo format if it cannot be inferred automatically.
+When running the CLI directly outside GitHub Actions, repository identity may need to be supplied through `REPO_FULL_NAME` in `owner/repo` format if it cannot be inferred automatically.
 
 Pull-request creation requires GitHub authentication with the necessary write permissions. File and stdout destinations do not require GitHub write authentication. However, private repositories and authenticated GitHub API lookups may still require credentials.
 
 ## Quick comparison
+
+| Destination | What it does |
+| :--- | :--- |
+| `pull-request` | Creates a branch, updates the changelog, and opens a pull request. |
+| `file` | Updates the local changelog file directly. |
+| `stdout` | Prints only the generated release section to standard output. |
+| `--dry-run` | Previews the full updated changelog and diagnostics without writing to disk or creating a pull request. |
+
 

@@ -2,7 +2,7 @@
 
 A developer’s workflow doesn’t always end with creating a pull request. Sometimes they want to update a changelog locally, preview the generated content, or use the release notes in another tool.
 
-`Changelog-bot` provides three output destinations through the `--output` option: **pull-request**, **file**, and **stdout**.
+[Changelog-Bot](https://github.com/necoz-oss/changelog-bot) provides three output destinations through the `--output` option: **pull-request**, **file**, and **stdout**.
 
 Let’s see how a developer named Aditya might use them.
 

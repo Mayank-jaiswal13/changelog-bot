@@ -2,7 +2,7 @@
 
 A developer’s workflow doesn’t always end with creating a pull request. Sometimes they want to update a changelog locally, preview the generated content, or use the release notes in another tool.
 
-`changelog-bot` provides three output destinations through the `--output` option: **pull-request**, **file**, and **stdout**.
+`Changelog-bot` provides three output destinations through the `--output` option: **pull-request**, **file**, and **stdout**.
 
 Let’s see how a developer named Aditya might use them.
 
@@ -30,9 +30,9 @@ Aditya doesn’t need a new Git branch or a pull request. He can continue workin
 
 Before making changes to the file, Aditya wants to check what the updated changelog would look like.
 
-He doesn’t want to modify CHANGELOG.md yet. He only wants to preview the proposed result and check the provider diagnostics.
+He doesn’t want to modify `CHANGELOG.md` yet. He only wants to preview the proposed result and check the provider diagnostics.
 
-He runs the same generation command with --dry-run:
+He runs the same generation command with `--dry-run`:
 
 ```
 pnpm dlx @nyaomaru/changelog-bot \
@@ -44,9 +44,9 @@ pnpm dlx @nyaomaru/changelog-bot \
 
 The `dry-run` prints the full updated changelog and provider diagnostics to the terminal without writing anything to disk or creating a pull request.
 
-Once Aditya is satisfied with the preview, he can run the command with --output file to update the actual file.
+Once Aditya is satisfied with the preview, he can run the command with `--output file` to update the actual file.
 
-**Note:** --dry-run is a preview mode, not another output destination. It cannot be combined with --output file or --output stdout. The same restriction applies to --dry-run-json-report.
+**Note:** --dry-run is a **preview mode**, not another output destination. It cannot be combined with --output file or --output stdout. The same restriction applies to --dry-run-json-report.
 
 ## 3. Use release notes in another tool
 
@@ -54,7 +54,7 @@ Aditya has another requirement. He wants to publish the generated release notes 
 
 He doesn’t need the entire updated `CHANGELOG.md`. He only needs the newly generated release section.
 
-For this, he uses the stdout destination:
+For this, he uses the `stdout` destination:
 
 ```
 pnpm dlx @nyaomaru/changelog-bot \

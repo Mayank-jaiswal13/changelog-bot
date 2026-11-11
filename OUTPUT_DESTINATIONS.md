@@ -46,7 +46,7 @@ The `dry-run` prints the full updated changelog and provider diagnostics to the 
 
 Once Aditya is satisfied with the preview, he can run the command with `--output file` to update the actual file.
 
-**Note:** --dry-run is a **preview mode**, not another output destination. It cannot be combined with --output file or --output stdout. The same restriction applies to --dry-run-json-report.
+**Note:** `--dry-run` is a **preview mode**, not another output destination. It cannot be combined with `--output file` or `--output stdout`. The same restriction applies to `--dry-run-json-report`.
 
 ## 3. Use release notes in another tool
 
@@ -91,7 +91,8 @@ Changelog-bot creates a branch, updates the changelog, and opens a pull request.
 
 This requires GitHub authentication with permission to push a branch and create a pull request.
 
-Repository identity and authentication
+
+## Repository identity and authentication
 
 When running the CLI directly outside GitHub Actions, repository identity may need to be supplied through `REPO_FULL_NAME` in `owner/repo` format if it cannot be inferred automatically.
 

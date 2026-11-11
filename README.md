@@ -91,6 +91,9 @@ confirm whether an LLM request was used or the run fell back. Add
 `--dry-run-json-report` to print that diagnostics block as JSON with `provider`,
 `model`, `aiUsed`, `fallbackReasons`, and prompt customization diagnostics.
 
+For a practical walkthrough of the available output destinations, see
+[Choosing an output destination](OUTPUT_DESTINATIONS.md).
+
 ### Generate changelog for a tagged release
 
 ```sh

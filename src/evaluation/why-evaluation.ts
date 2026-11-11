@@ -34,7 +34,9 @@ export type WhyEvaluationCase = {
 export type WhyEvaluationOptions = {
   /**
    * Whether to count unanchored notes (prose not matching any candidate) on positive
-   * cases as decision true positives. Defaults to true to accommodate generative LLMs.
+   * cases as confirmed evidence true positives. Defaults to false so unverified prose
+   * does not inflate evidence-grounded precision; unanchored decisions remain tracked
+   * in `unanchoredSelections` and decision-level metrics.
    */
   allowParaphrasedEvidence?: boolean;
 };
@@ -47,18 +49,38 @@ export type WhyEvaluationMetrics = {
   expectedSelections: number;
   /** Number of WHY notes returned by the extractor for corpus cases. */
   predictedSelections: number;
-  /** Correctly accepted cases. */
+  /**
+   * Evidence-grounded true positives: positive cases whose returned note preserves an
+   * expected source candidate (or unanchored prose when `allowParaphrasedEvidence` is true).
+   */
   truePositives: number;
-  /** Incorrectly accepted cases. */
+  /** Incorrectly accepted cases, including wrong candidates and unverified prose when strict. */
   falsePositives: number;
-  /** Correct cases omitted by the extractor. */
+  /** Expected positive cases that did not achieve an evidence-grounded true positive. */
   falseNegatives: number;
-  /** Fraction of returned notes that belong to a labeled positive case. */
+  /**
+   * Evidence-grounded precision: fraction of returned notes that are confirmed true positives.
+   * Unanchored notes on positive cases do not count as confirmed TPs by default.
+   */
   precision: number | null;
-  /** Fraction of labeled positive cases that produced a note. */
+  /**
+   * Evidence-grounded recall: fraction of labeled positive cases that achieved a confirmed
+   * true positive (matching an expected candidate by default).
+   */
   recall: number | null;
-  /** Harmonic mean of precision and recall. */
+  /** Harmonic mean of evidence-grounded precision and recall. */
   f1: number | null;
+  /**
+   * Decision-level true positives: positive cases that received a non-wrong-candidate note
+   * (including unanchored prose), separating selection decision from verbatim evidence grounding.
+   */
+  decisionTruePositives: number;
+  /** Decision-level precision across all returned notes (counting unanchored positive notes). */
+  decisionPrecision: number | null;
+  /** Decision-level recall across labeled positive cases (counting unanchored positive notes). */
+  decisionRecall: number | null;
+  /** Harmonic mean of decisionPrecision and decisionRecall. */
+  decisionF1: number | null;
   /** Positive cases whose returned text preserves the expected source candidate. */
   exactCandidatePreservations: number;
   /** Source-candidate preservation rate among labeled positive cases. */
@@ -252,7 +274,9 @@ export function evaluateWhySelections(
   output: readonly WhyExtractionResult[],
   options?: WhyEvaluationOptions,
 ): WhyEvaluationMetrics {
-  const allowParaphrasedEvidence = options?.allowParaphrasedEvidence ?? true;
+  // WHY: Default to strict evidence-grounded scoring so unanchored prose (which cannot be
+  // verified without semantic interpretation) does not inflate confirmed true positives.
+  const allowParaphrasedEvidence = options?.allowParaphrasedEvidence ?? false;
 
   const casesByPrNumber = new Map<number, WhyEvaluationCase>();
   for (const evaluationCase of cases) {
@@ -284,6 +308,7 @@ export function evaluateWhySelections(
   let truePositives = 0;
   let falsePositives = 0;
   let falseNegatives = 0;
+  let decisionTruePositives = 0;
   let exactCandidatePreservations = 0;
   let wrongCandidateSelections = 0;
   let unanchoredSelections = 0;
@@ -350,6 +375,7 @@ export function evaluateWhySelections(
         falseNegatives += 1;
         wrongCandidateSelections += 1;
       } else if (isUnanchored) {
+        decisionTruePositives += 1;
         if (allowParaphrasedEvidence) {
           truePositives += 1;
         } else {
@@ -358,6 +384,7 @@ export function evaluateWhySelections(
         }
       } else {
         truePositives += 1;
+        decisionTruePositives += 1;
         if (preservesExpectedCandidate) {
           exactCandidatePreservations += 1;
         }
@@ -395,6 +422,10 @@ export function evaluateWhySelections(
   const recall = ratio(truePositives, expectedSelections);
   const f1 = f1Score(precision, recall);
 
+  const decisionPrecision = ratio(decisionTruePositives, predictedSelections);
+  const decisionRecall = ratio(decisionTruePositives, expectedSelections);
+  const decisionF1 = f1Score(decisionPrecision, decisionRecall);
+
   const totalUnrelatedCases = wrongChangeAcceptances + wrongChangeRejections;
   const wrongChangeAcceptanceRate = ratio(
     wrongChangeAcceptances,
@@ -415,6 +446,10 @@ export function evaluateWhySelections(
     precision,
     recall,
     f1,
+    decisionTruePositives,
+    decisionPrecision,
+    decisionRecall,
+    decisionF1,
     exactCandidatePreservations,
     exactCandidatePreservationRate: ratio(
       exactCandidatePreservations,

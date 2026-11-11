@@ -88,6 +88,10 @@ describe('evaluateWhySelections', () => {
       precision: 1 / 3,
       recall: 1,
       f1: 0.5,
+      decisionTruePositives: 1,
+      decisionPrecision: 1 / 3,
+      decisionRecall: 1,
+      decisionF1: 0.5,
       exactCandidatePreservations: 1,
       exactCandidatePreservationRate: 1,
       unexpectedSelections: 1,
@@ -347,13 +351,13 @@ describe('evaluateWhySelections', () => {
     );
   });
 
-  test('tracks unanchored notes and respects allowParaphrasedEvidence option (#237)', () => {
+  test('does not count unanchored or incorrect paraphrase as confirmed TP by default and separates decision metrics (#237)', () => {
     const caseItem: WhyEvaluationCase = {
       id: 'pr-20-paraphrased',
       item: {
         prNumber: 20,
-        title: 'Enhance performance',
-        itemText: 'Enhance performance',
+        title: 'Enhance cache performance',
+        itemText: 'Enhance cache performance',
         sectionTitle: 'Changed',
         trustScore: 9,
         trustBucket: 'high',
@@ -365,36 +369,78 @@ describe('evaluateWhySelections', () => {
       expectedSelectedCandidateIndex: 0,
     };
 
-    const unanchoredOutput = [
+    // Unanchored note paraphrasing an unrelated rationale (e.g. authentication security instead of caching)
+    const incorrectParaphraseOutput = [
       {
         prNumber: 20,
-        why: 'Avoids heavy recomputation by utilizing a local memory cache.',
+        why: 'Improves authentication security by rotating session tokens.',
         confidence: 'high' as const,
       },
     ];
 
-    // Default: allowParaphrasedEvidence is true (decision TP)
+    // Default (strict): unverified unanchored prose must NOT inflate evidence precision
+    const strictMetrics = evaluateWhySelections(
+      [caseItem],
+      incorrectParaphraseOutput,
+    );
+    expect(strictMetrics.truePositives).toBe(0);
+    expect(strictMetrics.falsePositives).toBe(1);
+    expect(strictMetrics.falseNegatives).toBe(1);
+    expect(strictMetrics.precision).toBe(0);
+    expect(strictMetrics.recall).toBe(0);
+    expect(strictMetrics.exactCandidatePreservations).toBe(0);
+    expect(strictMetrics.unanchoredSelections).toBe(1);
+    expect(strictMetrics.decisionTruePositives).toBe(1);
+    expect(strictMetrics.decisionPrecision).toBe(1);
+    expect(strictMetrics.outcomes[0]?.isUnanchored).toBe(true);
+    expect(strictMetrics.outcomes[0]?.isWrongCandidate).toBe(false);
+
+    // Explicit opt-in for paraphrased evidence
     const permissiveMetrics = evaluateWhySelections(
       [caseItem],
-      unanchoredOutput,
+      incorrectParaphraseOutput,
+      { allowParaphrasedEvidence: true },
     );
     expect(permissiveMetrics.truePositives).toBe(1);
     expect(permissiveMetrics.falsePositives).toBe(0);
     expect(permissiveMetrics.falseNegatives).toBe(0);
+    expect(permissiveMetrics.precision).toBe(1);
     expect(permissiveMetrics.exactCandidatePreservations).toBe(0);
     expect(permissiveMetrics.unanchoredSelections).toBe(1);
-    expect(permissiveMetrics.outcomes[0]?.isUnanchored).toBe(true);
-    expect(permissiveMetrics.outcomes[0]?.isWrongCandidate).toBe(false);
+  });
 
-    // Strict mode: allowParaphrasedEvidence is false
-    const strictMetrics = evaluateWhySelections([caseItem], unanchoredOutput, {
-      allowParaphrasedEvidence: false,
-    });
-    expect(strictMetrics.truePositives).toBe(0);
-    expect(strictMetrics.falsePositives).toBe(1);
-    expect(strictMetrics.falseNegatives).toBe(1);
-    expect(strictMetrics.unanchoredSelections).toBe(1);
-    expect(strictMetrics.outcomes[0]?.isUnanchored).toBe(true);
+  test('counts incorrectly accepted missing-reason cases as false positives with 0% rejection rate (#237)', () => {
+    const missingReasonCase: WhyEvaluationCase = {
+      id: 'cf-missing-reason-accepted',
+      familyId: 'family-missing',
+      counterfactualRole: 'missing-reason',
+      item: {
+        prNumber: 105,
+        title: 'Refactor helper module',
+        itemText: 'Refactor helper module',
+        sectionTitle: 'Changed',
+        trustScore: 7,
+        trustBucket: 'medium',
+        requiresHighConfidence: false,
+        candidates: ['Extract shared helper into src/utils/format.ts.'],
+      },
+      expectedSelectedCandidateIndex: null,
+    };
+
+    const metrics = evaluateWhySelections(
+      [missingReasonCase],
+      [
+        {
+          prNumber: 105,
+          why: 'Extract shared helper into src/utils/format.ts.',
+          confidence: 'medium',
+        },
+      ],
+    );
+
+    expect(metrics.falsePositives).toBe(1);
+    expect(metrics.missingReasonRejections).toBe(0);
+    expect(metrics.missingReasonRejectionRate).toBe(0);
   });
 
   test('tracks counterfactual rejection metrics and returns null when denominators are zero (#237)', () => {

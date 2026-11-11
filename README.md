@@ -86,7 +86,10 @@ pnpm dlx @nyaomaru/changelog-bot \
   --dry-run
 ```
 
-Dry-runs print provider diagnostics before the generated changelog so you can confirm whether an LLM request was used or the run fell back. Add --dry-run-json-report to print that diagnostics block as JSON with provider, model, aiUsed, fallbackReasons, and prompt customization diagnostics.
+Dry-runs print provider diagnostics before the generated changelog so you can
+confirm whether an LLM request was used or the run fell back. Add
+`--dry-run-json-report` to print that diagnostics block as JSON with `provider`,
+`model`, `aiUsed`, `fallbackReasons`, and prompt customization diagnostics.
 
 **Output destinations**
 

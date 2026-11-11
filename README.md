@@ -77,7 +77,7 @@ Using it in CI? Jump to [GitHub Actions integration](#github-actions-integration
 
 ### Dry-run for latest release
 
-```sh
+```
 pnpm dlx @nyaomaru/changelog-bot \
   --release-tag HEAD \
   --release-name 0.1.0-dev \
@@ -90,6 +90,33 @@ Dry-runs print provider diagnostics before the generated changelog so you can
 confirm whether an LLM request was used or the run fell back. Add
 `--dry-run-json-report` to print that diagnostics block as JSON with `provider`,
 `model`, `aiUsed`, `fallbackReasons`, and prompt customization diagnostics.
+
+**Output destinations**
+
+<u>Write to a local CHANGELOG.md file:
+</u>
+```
+pnpm dlx @nyaomaru/changelog-bot \
+  --release-tag HEAD \
+  --release-name 0.1.0-dev \
+  --changelog-path CHANGELOG.md \
+  --output file
+```
+
+<u>
+Print release notes to stdout:
+</u>
+
+```
+pnpm dlx @nyaomaru/changelog-bot \
+  --release-tag HEAD \
+  --release-name 0.1.0-dev \
+  --output stdout > release-notes.md
+
+```
+
+For a practical walkthrough of the available output destinations, see
+[Choosing an output destination](OUTPUT_DESTINATIONS.md).
 
 ### Generate changelog for a tagged release
 

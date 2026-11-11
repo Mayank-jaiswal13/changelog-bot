@@ -15,7 +15,7 @@ import {
   createMockReleasePlan,
   resolvedCustomization,
   unresolvedCustomization,
-} from '../fixtures/changelog-run.ts';
+} from '../fixtures/changelog-run.js';
 
 const cli = createMockCliOptions();
 const appConfig = createMockAppConfig();
@@ -332,6 +332,7 @@ describe('executeChangelogRun', () => {
       deps,
     });
 
+    expect(deps.ensureGithubTokenRequired).not.toHaveBeenCalled();
     expect(deps.writeChangelog).not.toHaveBeenCalled();
     expect(deps.createPR).not.toHaveBeenCalled();
     expect(log).toHaveBeenCalledWith(

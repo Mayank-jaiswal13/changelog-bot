@@ -72,6 +72,7 @@ export function createMockAppConfig(
       openai: { apiKey: undefined, model: 'mock-openai' },
       anthropic: { apiKey: undefined, model: 'mock-anthropic' },
       gemini: { apiKey: undefined, model: 'mock-gemini' },
+      xai: { apiKey: undefined, model: 'mock-xai' },
       ...overrides.providers,
     },
     typesafe: { apiKey: undefined, model: 'jev-latest', ...overrides.typesafe },
@@ -96,9 +97,7 @@ export function createMockProvider(
       maxOutputTokens: 1000,
     },
     generate: async () => ({
-      new_section_markdown: 'generated section',
-      pr_title: 'docs(changelog): test',
-      pr_body: 'body',
+      changes: {},
     }),
     classifyChanges: async () => ({ assignments: {}, diagnostics: [] }),
     extractWhyNotes: async () => ({ items: [] }),
@@ -210,8 +209,12 @@ export function createChangelogRunDeps(
     fetchPullRequestsForBranch: jest.fn(async () => []),
     mapCommitsToPrs: jest.fn(async () => ({})),
     fetchReleaseBody: jest.fn(async () => ''),
-    fetchPRDetails: jest.fn(async () => null),
-    fetchIssueDetails: jest.fn(async () => null),
+    fetchPRDetails: jest.fn<ChangelogRunDependencies['fetchPRDetails']>(
+      async () => ({ status: 'not-found', message: 'Mock PR not found' }),
+    ),
+    fetchIssueDetails: jest.fn<ChangelogRunDependencies['fetchIssueDetails']>(
+      async () => ({ status: 'not-found', message: 'Mock issue not found' }),
+    ),
     resolveCustomInstructionsWithDiagnostics: jest.fn(
       () => unresolvedCustomization,
     ),
@@ -223,25 +226,29 @@ export function createChangelogRunDeps(
       aiUsed: false,
       fallbackReasons: [],
     })),
-    finalizeChangelogUpdate: jest.fn((params) => ({
+    finalizeChangelogUpdate: jest.fn<
+      ChangelogRunDependencies['finalizeChangelogUpdate']
+    >((params) => ({
       llm: params.llm,
       updated: 'updated changelog',
     })),
-    runWhyExtraction: jest.fn(async (params) => ({
-      llm: params.llm,
-      diagnostics: {
-        enabled: false,
-        engine: 'llm',
-        selectionDiagnostics: [],
-        aiUsed: false,
-        targetsFound: 0,
-        prBodiesFetched: 0,
-        skippedBeforeFetch: 0,
-        skippedLowTrust: 0,
-        notesRendered: 0,
-        fallbackReasons: [],
-      },
-    })),
+    runWhyExtraction: jest.fn<ChangelogRunDependencies['runWhyExtraction']>(
+      async (params) => ({
+        llm: params.llm,
+        diagnostics: {
+          enabled: false,
+          engine: 'llm',
+          selectionDiagnostics: [],
+          aiUsed: false,
+          targetsFound: 0,
+          prBodiesFetched: 0,
+          skippedBeforeFetch: 0,
+          skippedLowTrust: 0,
+          notesRendered: 0,
+          fallbackReasons: [],
+        },
+      }),
+    ),
     writeChangelog: jest.fn(),
     ensureGithubTokenRequired: jest.fn(),
     createPR: jest.fn(async () => 1),

@@ -214,11 +214,19 @@ describe('Counterfactual WHY Case Families (#237)', () => {
 
       for (const negativeVariant of [...unrelated, ...missingReason]) {
         expect(negativeVariant.expectedSelectedCandidateIndex).toBeNull();
-        // Keep the change/title fixed while varying only the rationale
+        // Keep the change/title and non-rationale inputs fixed while varying only the rationale
         expect(negativeVariant.item.title).toBe(anchor.item.title);
         expect(negativeVariant.item.itemText).toBe(anchor.item.itemText);
         expect(negativeVariant.item.sectionTitle).toBe(
           anchor.item.sectionTitle,
+        );
+        expect(negativeVariant.item.trustScore).toBe(anchor.item.trustScore);
+        expect(negativeVariant.item.trustBucket).toBe(anchor.item.trustBucket);
+        expect(negativeVariant.item.requiresHighConfidence).toBe(
+          anchor.item.requiresHighConfidence,
+        );
+        expect(negativeVariant.item.candidates).toHaveLength(
+          anchor.item.candidates.length,
         );
         expect(negativeVariant.familyId).toBe(familyId);
       }

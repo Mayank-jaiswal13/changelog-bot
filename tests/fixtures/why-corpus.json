@@ -867,8 +867,8 @@
       "title": "feat(why): add experimental Jev Noul selection engine",
       "itemText": "Add experimental Jev Noul selection engine",
       "sectionTitle": "Added",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 10,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Implement JevWhyExtractor class, register provider factory option, and export selection types."
@@ -890,6 +890,7 @@
       "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
+        "Separate changelog execution into input-resolution and output-finalization phases.",
         "Unbounded repetition in the markdown heading regex caused catastrophic backtracking on large release notes."
       ]
     },
@@ -905,10 +906,11 @@
       "title": "refactor: separate changelog run phase",
       "itemText": "Separate changelog run phase",
       "sectionTitle": "Changed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
+        "Separate changelog execution into input-resolution and output-finalization phases.",
         "Split executeChangelogRun into resolveChangelogRunInput and finalizeChangelogRunOutput functions."
       ]
     },
@@ -943,8 +945,8 @@
       "title": "Make PR labeling permission optional",
       "itemText": "Make PR labeling permission optional",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Wrap the octokit.rest.issues.addLabels call in a try-catch block and log a warning on failure."
@@ -966,6 +968,7 @@
       "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
+        "Update test script to execute node with experimental-vm-modules directly instead of POSIX NODE_OPTIONS syntax.",
         "Exponential backoff reduces HTTP 429 rate-limit failures when burst requests hit LLM endpoints."
       ]
     },
@@ -981,11 +984,12 @@
       "title": "fix(dx): support Windows development, cross-platform test runner, and normalize CRLF in contract tests",
       "itemText": "Support Windows development, cross-platform test runner, and normalize CRLF in contract tests",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
-        "Update package.json test script and replace raw string comparisons in test helpers."
+        "Update test script to execute node with experimental-vm-modules directly instead of POSIX NODE_OPTIONS syntax.",
+        "Replace raw string comparisons in test helpers and update test runner scripts."
       ]
     },
     "expectedSelectedCandidateIndex": null
@@ -1004,6 +1008,7 @@
       "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
+        "Extend run-why-evaluation to support repeated runs and configurable output directory.",
         "Sanitizing output file paths prevents directory traversal attacks from untrusted configuration files."
       ]
     },
@@ -1019,10 +1024,11 @@
       "title": "test(why): persist reproducible evaluation artifacts",
       "itemText": "Persist reproducible evaluation artifacts",
       "sectionTitle": "Added",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
+        "Extend run-why-evaluation to support repeated runs and configurable output directory.",
         "Create src/evaluation/why-evaluation-artifacts.ts with writeFileSync helpers for JSON and Markdown."
       ]
     },
@@ -1055,8 +1061,8 @@
       "title": "fix(llm): add exponential backoff for rate-limited requests",
       "itemText": "Add exponential backoff for rate-limited requests",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Add retry loop with setTimeout delay multiplier in src/utils/http.ts."
@@ -1091,8 +1097,8 @@
       "title": "security: avoid catastrophic backtracking in release heading regex",
       "itemText": "Avoid catastrophic backtracking in release heading regex",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 10,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Replace nested quantifiers in HEADING_RE with a linear character class match."
@@ -1127,8 +1133,8 @@
       "title": "perf: replace O(N^2) PR reference lookup with Map",
       "itemText": "Replace O(N^2) PR reference lookup with Map",
       "sectionTitle": "Changed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Change array.find lookup inside mapCommitsToPrs to new Map() keyed by SHA."
@@ -1163,8 +1169,8 @@
       "title": "security: sanitize output changelog file path",
       "itemText": "Sanitize output changelog file path",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 10,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "Call path.resolve and verify prefix startsWith(process.cwd()) in src/lib/changelog-file.ts."
@@ -1199,8 +1205,8 @@
       "title": "ドラフトリリースの公開処理を修正",
       "itemText": "ドラフトリリースの公開処理を修正",
       "sectionTitle": "Fixed",
-      "trustScore": 7,
-      "trustBucket": "medium",
+      "trustScore": 9,
+      "trustBucket": "high",
       "requiresHighConfidence": false,
       "candidates": [
         "リリース公開イベントのハンドラを更新し、ペイロードのパース処理を変更した。"

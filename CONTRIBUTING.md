@@ -54,7 +54,6 @@ An example request:
 
 If you are unsure whether an issue suits you, ask in the issue. If you start and cannot finish, leave a comment so the next person knows.
 
-
 ## Workflow
 
 1. Fork this repository

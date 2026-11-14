@@ -9,7 +9,12 @@ import type { AppConfig } from '@/types/config.js';
  */
 export function getRepoFullName(appConfig: AppConfig): string {
   const repoFull = appConfig.github.repoFullName;
-  if (!repoFull || !repoFull.includes('/')) {
+  const repositoryParts = repoFull?.split('/') ?? [];
+  if (
+    !repoFull ||
+    repositoryParts.length !== 2 ||
+    repositoryParts.some((component) => !component || /\s/.test(component))
+  ) {
     throw new ConfigError(
       'REPO_FULL_NAME or GITHUB_REPOSITORY is required (owner/repo).',
     );

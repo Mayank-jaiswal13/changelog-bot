@@ -1,6 +1,8 @@
 import { ConfigError } from '@/lib/errors.js';
 import type { AppConfig } from '@/types/config.js';
 
+const REPOSITORY_PARTS_COUNT = 2;
+
 /**
  * Resolve the GitHub repo full name (owner/repo) from runtime config.
  * WHY: The CLI relies on a concrete repo to build compare links and PR URLs; we fail fast here.
@@ -12,7 +14,7 @@ export function getRepoFullName(appConfig: AppConfig): string {
   const repositoryParts = repoFull?.split('/') ?? [];
   if (
     !repoFull ||
-    repositoryParts.length !== 2 ||
+    repositoryParts.length !== REPOSITORY_PARTS_COUNT ||
     repositoryParts.some((component) => !component || /\s/.test(component))
   ) {
     throw new ConfigError(
